@@ -120,6 +120,10 @@ export const getRouterData = app => {
     '/order/undone-order': {
       component: dynamicWrapper(app, [], () => import('../routes/OrderManage/UndoneOrder')),
     },
+    // 报表分析-总览
+    '/report/report-total': {
+      component: dynamicWrapper(app, [], () => import('../routes/Qinx/ZChinaMap')),
+    },
     // 报表分析-时间
     '/report/report-time': {
       component: dynamicWrapper(app, [], () => import('../routes/ReportAnay/TableTime')),

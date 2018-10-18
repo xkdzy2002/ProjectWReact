@@ -49,6 +49,10 @@ const menuData = [
     path: 'report',
     children: [
       {
+        name: '总览',
+        path: 'report-total',
+      },
+      {
         name: '归属地',
         path: 'report-attr',
       },
