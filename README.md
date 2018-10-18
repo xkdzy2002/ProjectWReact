@@ -1,3 +1,3 @@
-# ProjectWReact
+# ProjectW
 忻州联通培训项目
-React for ProjectW
+后台前端React EChart
