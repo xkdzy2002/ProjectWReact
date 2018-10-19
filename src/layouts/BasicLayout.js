@@ -290,7 +290,7 @@ export default class BasicLayout extends React.PureComponent {
               ]}
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 中国联通信息化部
+                  Copyright <Icon type="copyright" /> 2018 联通学院
                 </Fragment>
               }
             />

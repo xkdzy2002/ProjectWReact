@@ -5,6 +5,26 @@ export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
 }
 
+export default {
+  formateDate(time) {
+    if (!time) return '';
+    let date = new Date(time);
+    return (
+      date.getFullYear() +
+      '-' +
+      (date.getMonth() + 1) +
+      '-' +
+      date.getDate() +
+      ' ' +
+      date.getHours() +
+      ':' +
+      date.getMinutes() +
+      ':' +
+      date.getSeconds()
+    );
+  },
+};
+
 export function getTimeDistance(type) {
   const now = new Date();
   const oneDay = 1000 * 60 * 60 * 24;
