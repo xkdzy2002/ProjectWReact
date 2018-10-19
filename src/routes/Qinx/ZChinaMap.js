@@ -110,7 +110,7 @@ export default class ZChinaMap extends Component {
             name: '王卡订单',
             type: 'map',
             mapType: 'china',
-            roam: false,
+            roam: true,
             label: {
               show: true,
               normal: {
@@ -148,6 +148,9 @@ export default class ZChinaMap extends Component {
     let time = new Date(now());
     time = time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate();
     this.updateMap(time);
+    window.onresize = () => {
+      this.myEchart.resize();
+    };
   }
 
   saveDatePicker = (e, datestring) => {
