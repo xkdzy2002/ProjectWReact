@@ -41,6 +41,10 @@ const menuData = [
         name: '待办',
         path: 'undone-order',
       },
+      {
+        name: '已取消',
+        path: 'cancel-order',
+      },
     ],
   },
   {
