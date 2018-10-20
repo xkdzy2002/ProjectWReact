@@ -1,68 +1,86 @@
 import React, { Component } from 'react';
-import { Table, Button, Form, Select, Row, Col } from 'antd';
+import { Table, Button, Form, Select, Row, Col, Input } from 'antd';
 import axios from 'axios';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
+// 创建表单
 const CreateForm = Form.create()(props => {
   const { getFieldDecorator } = props.form;
+  const {getTableList} = props;
+  const province_list = [];
+  // 提交
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(123);
-    // this.props.form.validateFields((err, values) => {
-    //   if (!err) {
-    //     console.log('Received values of form: ', values);
-    //   }
-    // });
+    props.form.validateFields((err, values) => {
+      if (!err) {
+        axios.get("http://10.52.200.46:9002/api/order/detail", {params:Object.assign(values,{processed:true})})
+        .then((res)=>{
+          if(res.data.result) {
+            res.data.result.forEach(function (el, i) {
+              el.key = i + 1;
+              if (el.status === 1) {
+                el.status = "已办理";
+              } else if (el.status === 2) {
+                el.status = "已取消办理";
+              }
+            });
+            getTableList(res.data.result)
+          } else {
+            getTableList([])
+          }
+        })
+      }
+    });
   }
-
+  // 获得省
+  axios.get("http://10.52.200.46:9002/api/address/province_name")
+  .then( (res)=>{
+    res.data.result.forEach((el,i)=>{
+      province_list.push(<Option key={el}>{el}</Option>)
+    })
+  })
   return (
     <div>
       <Form onSubmit={handleSubmit}>
         <Row>
-        <Col span={8}>
+        <Col span={6}>
           <FormItem
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 8 }}
             label="邮寄地址"
-            hasFeedback
           >
-            {getFieldDecorator('address', {
-              rules: [
-                { required: true, message: 'Please select your country!' },
-              ],
-            })(
-              <Select placeholder="Please select a country" style={{ width: 200 }}>
-                <Option value="china">China</Option>
-                <Option value="use">U.S.A</Option>
+            {getFieldDecorator('province', { })(
+              <Select placeholder="选择省" style={{ width: 150 }}>
+                <Option value="">全国</Option>
+                {province_list}
               </Select>
             )}
           </FormItem>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <FormItem
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 8 }}
             label="订单状态"
-            hasFeedback
           >
-            {getFieldDecorator('orderStatus', {
-              rules: [
-                { required: true, message: 'Please select your country!' },
-              ],
-            })(
-              <Select placeholder="Please select a country" style={{ width: 200 }}>
-                <Option value="china">China</Option>
-                <Option value="use">U.S.A</Option>
+            {getFieldDecorator('status', { })(
+              <Select placeholder="处理状态" style={{ width: 150 }}>
+                <Option value="">全部</Option>
+                <Option value="1">已办理</Option>
+                <Option value="2">已取消办理</Option>
               </Select>
             )}
           </FormItem>
         </Col>
-        <Col span={8}>
-          <FormItem
-            wrapperCol={{ span: 12, offset: 6 }}
-          >
-            <Button type="primary" htmlType="submit">Submit</Button>
+        <Col span={6}>
+          <FormItem labelCol={{ span: 6 }} wrapperCol={{span: 6}} label="姓名">
+            {getFieldDecorator('name', { })(<Input style={{ width: 100 }} placeholder="姓名"/>)}
+          </FormItem>
+        </Col>
+        <Col span={2}>
+          <FormItem  wrapperCol={{ span: 12, offset: 6 }}>
+            <Button type="primary" htmlType="submit">提交</Button>
           </FormItem>
         </Col>
         </Row>
@@ -82,7 +100,7 @@ export default class DoneOrders extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://10.52.200.46:9002/api/order?key=status&value=1')
+    axios.get('http://10.52.200.46:9002/api/order/detail?processed=true')
       .then((res) => {
         res.data.result.forEach(function (el, i) {
           el.key = i + 1;
@@ -97,44 +115,12 @@ export default class DoneOrders extends Component {
       .catch(function (error) {
         console.log(error);
       });
+
   }
-  handleChange = (value) => {
-    console.log(`selected ${value}`);
+  // 获取table
+  getTableList = (values)=> {
+    this.setState({dataList: values})
   }
-
-
-  // state = {
-  //   filteredInfo: null,
-  //   sortedInfo: null,
-  // };
-
-  // handleChange = (pagination, filters, sorter) => {
-  //   console.log('Various parameters', pagination, filters, sorter);
-  //   this.setState({
-  //     filteredInfo: filters,
-  //     sortedInfo: sorter,
-  //   });
-  // };
-
-  // clearFilters = () => {
-  //   this.setState({ filteredInfo: null });
-  // };
-
-  // clearAll = () => {
-  //   this.setState({
-  //     filteredInfo: null,
-  //     sortedInfo: null,
-  //   });
-  // };
-
-  // setAgeSort = () => {
-  //   this.setState({
-  //     sortedInfo: {
-  //       order: 'descend',
-  //       columnKey: 'age',
-  //     },
-  //   });
-  // };
 
   render() {
     let { sortedInfo, filteredInfo } = this.state;
@@ -146,18 +132,11 @@ export default class DoneOrders extends Component {
         title: '订单ID',
         dataIndex: 'order_id',
         key: 'order_id',
-        // filters: [{ text: 'Joe', value: 'Joe' }, { text: 'Jim', value: 'Jim' }],
-        // filteredValue: filteredInfo.name || null,
-        // onFilter: (value, record) => record.name.includes(value),
-        // sorter: (a, b) => a.name.length - b.name.length,
-        // sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       },
       {
         title: '用户姓名',
         dataIndex: 'customer_name',
         key: 'customer_name',
-        // sorter: (a, b) => a.age - b.age,
-        // sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
       },
       {
         title: '新选号',
@@ -183,26 +162,18 @@ export default class DoneOrders extends Component {
         title: '更新时间',
         dataIndex: 'update_time',
         key: 'update_time',
-        // filters: [{ text: 'London', value: 'London' }, { text: 'New York', value: 'New York' }],
-        // filteredValue: filteredInfo.address || null,
-        // onFilter: (value, record) => record.address.includes(value),
-        // sorter: (a, b) => a.address.length - b.address.length,
-        // sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
       },
       {
         title: '订单状态',
         dataIndex: 'status',
         key: 'status',
-        // filters: [{ text: 'London', value: 'London' }, { text: 'New York', value: 'New York' }],
-        // filteredValue: filteredInfo.status || null,
-        // onFilter: (value, record) => record.address.includes(value),
       },
     ];
     return (
       <div>
-        <CreateForm>
+        <CreateForm getTableList={this.getTableList}>
         </CreateForm>
-        <Table columns={columns} dataSource={this.state.dataList} />
+        <Table columns={columns} dataSource={this.state.dataList} size="middle" />
       </div>
     );
   }
