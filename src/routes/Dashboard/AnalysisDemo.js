@@ -5,6 +5,7 @@ import { ChartCard, yuan, MiniArea, MiniBar,MiniProgress,Field,Bar,Pie,TimelineC
 import Trend from '../../components/Trend';
 import NumberInfo from '../../components/NumberInfo';
 import { getTimeDistance } from '../../utils/utils';
+import axios from './../../axios';
 
 import styles from './AnalysisDemo.less';
 
@@ -45,6 +46,7 @@ export default class  AnalysisDemo extends Component{
     salesType: 'all',
     currentTabKey: '',
     rangePickerValue: getTimeDistance('year'),
+    chartdata:[]
   };
 
   componentDidMount() {
@@ -52,7 +54,31 @@ export default class  AnalysisDemo extends Component{
     // dispatch({
     //   type: 'chart/fetch',
     // });
+    this.request();
   }
+
+  request = ()=>{
+    axios.ajax({
+        url:'/stat/order_number_by_day',
+        data:{
+            params:{
+                page:1
+            },
+            //isShowLoading:false
+        }
+    }).then((res) =>{
+        if(!res.error){
+            res.result.map((item,index)=>{
+                item.key = index;
+            })
+            this.setState({
+                // dataSource2:res.result,
+                // page_size:res.page_size,
+                // total_count:res.total_count
+            });
+        }
+    })
+ }
 
   render(){
       return(
@@ -62,7 +88,7 @@ export default class  AnalysisDemo extends Component{
               <ChartCard
                 bordered={false}
                 title="总销售额"
-                // loading={}
+                loading={false}
                 action={
                   <Tooltip title="指标说明">
                     <Icon type="info-circle-o" />
@@ -86,7 +112,7 @@ export default class  AnalysisDemo extends Component{
               <ChartCard
                 bordered={false}
                 title="访问量"
-
+                loading={false}
                 action={
                   <Tooltip title="指标说明">
                     <Icon type="info-circle-o" />
@@ -103,7 +129,7 @@ export default class  AnalysisDemo extends Component{
               <ChartCard
                 bordered={false}
                 title="支付笔数"
-
+                loading={false}
                 action={
                   <Tooltip title="指标说明">
                     <Icon type="info-circle-o" />
@@ -120,7 +146,7 @@ export default class  AnalysisDemo extends Component{
               <ChartCard
                 bordered={false}
                 title="运营活动效果"
-
+                loading={false}
                 action={
                   <Tooltip title="指标说明">
                     <Icon type="info-circle-o" />
@@ -146,7 +172,7 @@ export default class  AnalysisDemo extends Component{
             </Col>
           </Row>
 
-            <Card bordered={false} bodyStyle={{ padding: 0 }}>
+            <Card loading={false} bordered={false} bodyStyle={{ padding: 0 }}>
             <div className={styles.salesCard}>
               <Tabs size="large" tabBarStyle={{ marginBottom: 24 }}>
                 <TabPane tab="销售额" key="sales">

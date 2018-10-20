@@ -22,7 +22,8 @@ export default class Axios {
     //     loading.style.display = 'block';
     // }
 
-    let baseApi = 'https://www.easy-mock.com/mock/5bc303ecb0bf35423bd75308/mockapi';
+    // let baseApi = 'https://www.easy-mock.com/mock/5bc303ecb0bf35423bd75308/mockapi';
+    let baseApi = 'http://10.52.200.46:9002/api';
     return new Promise((resolve, reject) => {
       axios({
         url: options.url,
