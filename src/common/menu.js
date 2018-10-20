@@ -64,6 +64,10 @@ const menuData = [
         name: '时间',
         path: 'report-time',
       },
+      {
+        name: '监控',
+        path: 'report-monitor',
+      }
     ],
   },
   // {

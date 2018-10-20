@@ -136,7 +136,14 @@ export const getRouterData = app => {
     '/report/report-attr': {
       component: dynamicWrapper(app, [], () => import('../routes/ReportAnay/TableAttr')),
     },
-
+    // 报表分析-监控
+    // '/report/report-monitor':{
+    //   component: dynamicWrapper(app, [], () => import('../routes/Dashboard/Analysis')),
+    // },
+    '/report/report-monitor':{
+      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/AnalysisDemo')),
+    },
+    // 其他
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },
