@@ -41,15 +41,11 @@ const menuData = [
         name: '待办',
         path: 'undone-order',
       },
-      {
-        name: '已取消',
-        path: 'cancel-order',
-      },
     ],
   },
   {
     name: '报表分析',
-    icon: 'form',
+    icon: 'table',
     path: 'report',
     children: [
       {
@@ -64,6 +60,10 @@ const menuData = [
         name: '时间',
         path: 'report-time',
       },
+      {
+        name: '监控',
+        path: 'report-monitor',
+      }
     ],
   },
   // {

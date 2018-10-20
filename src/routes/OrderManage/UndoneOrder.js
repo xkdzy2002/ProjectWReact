@@ -8,34 +8,29 @@ const CreateForm = Form.create()(props => {
   const { modalVisiable, showModal, formValues, form, get_data } = props;
   const { getFieldDecorator } = props.form;
   const Option = Select.Option;
-  let optSts;
   //触发onOk事件的时候，首先检验，然后提交数据
   const okHandle = () => {
     form.validateFields((err, fieldsValues) => {
       if (err) { return; }
-      const { order_id, customer_name, cert_num, address } = fieldsValues;
+      const { order_id, customer_name, cert_num, address, status } = fieldsValues;
       let params = {};
       params.order_id = order_id;
-      params.status = optSts;
+      params.status = status;
       params.customer_name = customer_name;
       params.cert_num = cert_num;
       params.address = address;
       axios.get("http://10.52.200.46:9002/api/order/confirm", {params: params})
       .then((res)=>{
-        console.log(res);
         get_data();
       })
       .catch((error)=> {
         console.log(error);
       });
+      form.resetFields();
+      showModal(false);
     });
-    showModal(false)
-    
   }
-  const handleChange =(value) => {
-    console.log(`selected ${value}`);
-    optSts = value;
-  }
+
   return (
     <Modal
       visible={modalVisiable}
@@ -52,12 +47,23 @@ const CreateForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{span:15}} label="姓名">
         {getFieldDecorator('customer_name', {
-          initialValue: formValues.customer_name
+          initialValue: formValues.customer_name,
+          rules: [{
+            required: true,
+            message: '必填选项',
+            max: 6
+          }],
         })(<Input placeholder="姓名"/>)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{span:15}} label="身份证号">
         {getFieldDecorator('cert_num', {
-          initialValue: formValues.cert_num
+          initialValue: formValues.cert_num,
+          rules: [{
+            required: true,
+            message: '请输入正确身份证号',
+            max: 18,
+            pattern: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+          }],
         })(<Input placeholder="身份证号"/>)}
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{span:15}} label="联系方式">
@@ -72,14 +78,24 @@ const CreateForm = Form.create()(props => {
       </FormItem>
       <FormItem labelCol={{ span: 5 }} wrapperCol={{span:15}} label="联系地址" >
         {getFieldDecorator('address', {
-          initialValue: formValues.address
+          initialValue: formValues.address,
+          rules: [{
+            required: true,
+            message: '请输入正确地址',
+            min: 9
+          }],
         })(<Input placeholder="联系地址"/>)}
       </FormItem>
-      <FormItem labelCol={{ span: 5 }} label="处理选择">
-        <Select style={{ width: 120 }} onChange={handleChange} placeholder="请选择">
-          <Option value="1">确认办理</Option>
-          <Option value="2">取消办理</Option>
-        </Select>
+      <FormItem labelCol={{ span: 5 }} label="处理选择" >
+        {getFieldDecorator('status', { rules: [{
+            required: true,
+            message: '必填选项',
+          }],})(
+          <Select style={{ width: 120 }} placeholder="请选择">
+            <Option value="1">已办理</Option>
+            <Option value="2">已取消办理</Option>
+          </Select>
+        )}
       </FormItem>
     </Modal>
   )
@@ -155,16 +171,6 @@ export default class UndoneOrders extends Component {
       key: 'create_time',
     },
     {
-      title: '更新时间',
-      dataIndex: 'update_time',
-      key: 'update_time',
-      // filters: [{ text: 'London', value: 'London' }, { text: 'New York', value: 'New York' }],
-      // filteredValue: filteredInfo.address || null,
-      // onFilter: (value, record) => record.address.includes(value),
-      // sorter: (a, b) => a.address.length - b.address.length,
-      // sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
-    },
-    {
       title: '操作',
       key: 'action',
       render: (text, record, index) => (
@@ -181,23 +187,12 @@ export default class UndoneOrders extends Component {
     });
   };
 
-  // handleOk = e => {
-  //   this.setState({
-  //     modalVisiable: false,
-  //   });
-  // };
-
-  // handleCancel = e => {
-  //   this.setState({
-  //     modalVisiable: false,
-  //   });
-  // };
   render() {
     const { modalVisiable, listIndex } = this.state;
     const sor = [this.state.dataList[0]];
     return (
       <div>
-        <Table columns={this.columns} dataSource={this.state.dataList} />
+        <Table columns={this.columns} dataSource={this.state.dataList} size="middle" />
         <CreateForm
           modalVisiable={modalVisiable}
           showModal={this.showModal}

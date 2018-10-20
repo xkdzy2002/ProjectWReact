@@ -120,10 +120,7 @@ export const getRouterData = app => {
     '/order/undone-order': {
       component: dynamicWrapper(app, [], () => import('../routes/OrderManage/UndoneOrder')),
     },
-    // 已取消
-    '/order/cancel-order': {
-      component: dynamicWrapper(app, [], () => import('../routes/OrderManage/CancelOrder')),
-    },
+
     // 报表分析-总览
     '/report/report-total': {
       component: dynamicWrapper(app, [], () => import('../routes/Qinx/ZPageQinx')),
@@ -136,7 +133,14 @@ export const getRouterData = app => {
     '/report/report-attr': {
       component: dynamicWrapper(app, [], () => import('../routes/ReportAnay/TableAttr')),
     },
-
+    // 报表分析-监控
+    // '/report/report-monitor':{
+    //   component: dynamicWrapper(app, [], () => import('../routes/Dashboard/Analysis')),
+    // },
+    '/report/report-monitor':{
+      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/AnalysisDemo')),
+    },
+    // 其他
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },
