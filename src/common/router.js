@@ -126,7 +126,7 @@ export const getRouterData = app => {
     },
     // 报表分析-总览
     '/report/report-total': {
-      component: dynamicWrapper(app, [], () => import('../routes/Qinx/ZChinaMap')),
+      component: dynamicWrapper(app, [], () => import('../routes/Qinx/ZPageQinx')),
     },
     // 报表分析-时间
     '/report/report-time': {
