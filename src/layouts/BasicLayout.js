@@ -270,9 +270,9 @@ export default class BasicLayout extends React.PureComponent {
             <GlobalFooter
               links={[
                 {
-                  key: 'Pro 首页',
-                  title: 'Pro 首页',
-                  href: 'http://pro.ant.design',
+                  key: '联通首页',
+                  title: '联通首页',
+                  href: 'http://www.chinaunicom.com/index.html',
                   blankTarget: true,
                 },
                 {
@@ -282,15 +282,15 @@ export default class BasicLayout extends React.PureComponent {
                   blankTarget: true,
                 },
                 {
-                  key: 'Ant Design',
-                  title: 'Ant Design',
-                  href: 'http://ant.design',
+                  key: 'China Unicom',
+                  title: 'China Unicom',
+                  href: 'http://www.10010.com',
                   blankTarget: true,
                 },
               ]}
               copyright={
                 <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
+                  Copyright <Icon type="copyright" /> 2018 联通学院
                 </Fragment>
               }
             />
