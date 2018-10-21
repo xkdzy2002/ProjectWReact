@@ -258,15 +258,6 @@ export default class ZChinaMap extends Component {
             type: 'map',
             mapType: 'china',
             roam: true,
-            label: {
-              show: true,
-              normal: {
-                show: false,
-              },
-              emphasis: {
-                show: false,
-              },
-            },
             itemStyle: {
               normal: {
                 borderColor: 'rgba(147, 235, 248, 1)',
@@ -281,6 +272,9 @@ export default class ZChinaMap extends Component {
               emphasis: {
                 areaColor: 'rgba(255,255,0,0.8)',
                 borderWidth: 1,
+                label: {
+                  show: true
+                }
               },
             },
             data: this.zResdata,
@@ -359,15 +353,6 @@ export default class ZChinaMap extends Component {
             type: 'map',
             mapType: 'china',
             roam: true,
-            label: {
-              show: true,
-              normal: {
-                show: false,
-              },
-              emphasis: {
-                show: false,
-              },
-            },
             itemStyle: {
               normal: {
                 borderColor: 'rgba(147, 235, 248, 1)',
@@ -385,6 +370,7 @@ export default class ZChinaMap extends Component {
                 lable: {
                   show: true,
                 },
+                
               },
             },
             data: data.result,
