@@ -155,6 +155,90 @@ let zAnimationOpts2 = {
   },
 };
 
+let zMapOpts = {
+  // backgroundColor: '#404a59',
+  title: {
+    text: '王卡订单来源分布',
+    subtext: '日期：',
+    left: 'center',
+    textStyle: {
+      fontSize: 25,
+      color: '#fff',
+    },
+    subtextStyle: {
+      color: '#fff',
+    },
+  },
+  tooltip: {
+    padding: 10,
+    backgroundColor: 'rgba(0,0,255,0.6)',
+    borderColor: 'rgba(255,255,255,0.4)',
+    borderWidth: 2,
+    extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
+    transitionDuration: 1,
+    textStyle: {
+      color: '#fff',
+      decoration: 'none',
+    },
+    alwaysShowContent: true,
+  },
+  visualMap: {
+    min: 0,
+    max: 100,
+    left: 'left',
+    top: 'bottom',
+    text: ['高', '低'], // 文本，默认为数值文本
+    calculable: true,
+    inRange: {
+      color: ['#64b8bd', '#006edd'], // 浅蓝
+    },
+    textStyle: {
+      color: '#fff',
+    },
+    // dimension: 2
+  },
+  toolbox: {
+    show: true,
+    orient: 'vertical',
+    left: 'right',
+    top: 'center',
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      restore: { show: true },
+      saveAsImage: { show: true },
+    },
+  },
+  series: [
+    {
+      name: '王卡订单',
+      type: 'map',
+      mapType: 'china',
+      roam: true,
+      itemStyle: {
+        normal: {
+          borderColor: 'rgba(147, 235, 248, 1)',
+          borderWidth: 1,
+          areaColor: 'rgba(255,255,255,0.1)',
+          shadowColor: 'rgba(128, 217, 248, 1)',
+          // shadowColor: 'rgba(255, 255, 255, 1)',
+          shadowOffsetX: -1,
+          shadowOffsetY: -1,
+          shadowBlur: 10,
+        },
+        emphasis: {
+          areaColor: 'rgba(255,255,0,0.8)',
+          borderWidth: 1,
+          lable: {
+            show: true,
+          },
+        },
+      },
+      data: [],
+    },
+  ],
+};
+
 export default class ZChinaMap extends Component {
   zEchart = null;
 
@@ -164,225 +248,107 @@ export default class ZChinaMap extends Component {
 
   zScroolPauser = false;
 
-  zTempHilight = 0;
-
-  zResdata = [
-    { name: '北京', value: Math.round(Math.random() * 1000) },
-    { name: '天津', value: Math.round(Math.random() * 1000) },
-    { name: '上海', value: Math.round(Math.random() * 1000) },
-    { name: '重庆', value: Math.round(Math.random() * 1000) },
-    { name: '河北', value: Math.round(Math.random() * 1000) },
-    { name: '河南', value: Math.round(Math.random() * 1000) },
-    { name: '云南', value: Math.round(Math.random() * 1000) },
-    { name: '辽宁', value: Math.round(Math.random() * 1000) },
-    { name: '黑龙江', value: Math.round(Math.random() * 1000) },
-    { name: '湖南', value: Math.round(Math.random() * 1000) },
-    { name: '安徽', value: Math.round(Math.random() * 1000) },
-    { name: '山东', value: Math.round(Math.random() * 1000) },
-    { name: '新疆', value: Math.round(Math.random() * 1000) },
-    { name: '江苏', value: Math.round(Math.random() * 1000) },
-    { name: '浙江', value: Math.round(Math.random() * 1000) },
-    { name: '江西', value: Math.round(Math.random() * 1000) },
-    { name: '湖北', value: Math.round(Math.random() * 1000) },
-    { name: '广西', value: Math.round(Math.random() * 1000) },
-    { name: '甘肃', value: Math.round(Math.random() * 1000) },
-    { name: '山西', value: Math.round(Math.random() * 1000) },
-    { name: '内蒙古', value: Math.round(Math.random() * 1000) },
-    { name: '陕西', value: Math.round(Math.random() * 1000) },
-    { name: '吉林', value: Math.round(Math.random() * 1000) },
-    { name: '福建', value: Math.round(Math.random() * 1000) },
-    { name: '贵州', value: Math.round(Math.random() * 1000) },
-    { name: '广东', value: Math.round(Math.random() * 1000) },
-    { name: '青海', value: Math.round(Math.random() * 1000) },
-    { name: '西藏', value: Math.round(Math.random() * 1000) },
-    { name: '四川', value: Math.round(Math.random() * 1000) },
-    { name: '宁夏', value: Math.round(Math.random() * 1000) },
-    { name: '海南', value: Math.round(Math.random() * 1000) },
-    { name: '台湾', value: Math.round(Math.random() * 1000) },
-    { name: '香港', value: Math.round(Math.random() * 1000) },
-    { name: '澳门', value: Math.round(Math.random() * 1000) },
-  ];
+  zScrollLength = 1;
 
   constructor(props) {
     super(props);
-    let time = new Date(now());
-    time = time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate();
 
     this.state = {
-      zOptions: {
-        title: {
-          text: '王卡订单来源分布',
-          subtext: '日期：' + time,
-          left: 'center',
-          textStyle: {
-            fontSize: 25,
-            color: '#fff',
-          },
-          subtextStyle: {
-            color: '#fff',
-          },
-        },
-        tooltip: {
-          trigger: 'item',
-        },
-        visualMap: {
-          min: 0,
-          max: 1000,
-          left: 'left',
-          top: 'bottom',
-          text: ['高', '低'], // 文本，默认为数值文本
-          calculable: true,
-          inRange: {
-            color: ['#64b8bd', '#006edd'], // 浅蓝
-          },
-          textStyle: {
-            color: '#fff',
-          },
-          // dimension: 2
-        },
-        toolbox: {
-          show: true,
-          orient: 'vertical',
-          left: 'right',
-          top: 'center',
-          feature: {
-            mark: { show: true },
-            dataView: { show: true, readOnly: false },
-            restore: { show: true },
-            saveAsImage: { show: true },
-          },
-        },
-        series: [
-          {
-            name: '王卡订单',
-            type: 'map',
-            mapType: 'china',
-            roam: true,
-            itemStyle: {
-              normal: {
-                borderColor: 'rgba(147, 235, 248, 1)',
-                borderWidth: 1,
-                areaColor: 'rgba(255,255,255,1)',
-                shadowColor: 'rgba(128, 217, 248, 1)',
-                // shadowColor: 'rgba(255, 255, 255, 1)',
-                shadowOffsetX: -1,
-                shadowOffsetY: -1,
-                shadowBlur: 10,
-              },
-              emphasis: {
-                areaColor: 'rgba(255,255,0,0.8)',
-                borderWidth: 1,
-                label: {
-                  show: true
-                }
-              },
-            },
-            data: this.zResdata,
-          },
-        ],
-      },
+      zOptions: zMapOpts,
       zAnimation: zAnimationOpts2,
     };
 
-    this.updateMap(time);
+    let time = new Date(now());
+    time = time.getFullYear() + '-' + (time.getMonth() + 1) + '-' + time.getDate();
+    this.queryMapData(time);
   }
 
-  updateMap = time => {
-    this.zQueryDate = time;
-    console.log(time);
-    $.get('http://10.52.200.46:9002/api/order/count_by_day?date=' + time, data => {
-      if (data.result == null) {
-        console.log(data);
-        console.log('使用假数据');
-        data.result = this.zResdata;
+  updateMap = (time, array) => {
+    if (array == null) {
+      console.log('假数据');
+      array = [
+        { name: '北京', value: Math.round(Math.random() * 1000) },
+        { name: '天津', value: Math.round(Math.random() * 1000) },
+        { name: '上海', value: Math.round(Math.random() * 1000) },
+        { name: '重庆', value: Math.round(Math.random() * 1000) },
+        { name: '河北', value: Math.round(Math.random() * 1000) },
+        { name: '河南', value: Math.round(Math.random() * 1000) },
+        { name: '云南', value: Math.round(Math.random() * 1000) },
+        { name: '辽宁', value: Math.round(Math.random() * 1000) },
+        { name: '黑龙江', value: Math.round(Math.random() * 1000) },
+        { name: '湖南', value: Math.round(Math.random() * 1000) },
+        { name: '安徽', value: Math.round(Math.random() * 1000) },
+        { name: '山东', value: Math.round(Math.random() * 1000) },
+        { name: '新疆', value: Math.round(Math.random() * 1000) },
+        { name: '江苏', value: Math.round(Math.random() * 1000) },
+        { name: '浙江', value: Math.round(Math.random() * 1000) },
+        { name: '江西', value: Math.round(Math.random() * 1000) },
+        { name: '湖北', value: Math.round(Math.random() * 1000) },
+        { name: '广西', value: Math.round(Math.random() * 1000) },
+        { name: '甘肃', value: Math.round(Math.random() * 1000) },
+        { name: '山西', value: Math.round(Math.random() * 1000) },
+        { name: '内蒙古', value: Math.round(Math.random() * 1000) },
+        { name: '陕西', value: Math.round(Math.random() * 1000) },
+        { name: '吉林', value: Math.round(Math.random() * 1000) },
+        { name: '福建', value: Math.round(Math.random() * 1000) },
+        { name: '贵州', value: Math.round(Math.random() * 1000) },
+        { name: '广东', value: Math.round(Math.random() * 1000) },
+        { name: '青海', value: Math.round(Math.random() * 1000) },
+        { name: '西藏', value: Math.round(Math.random() * 1000) },
+        { name: '四川', value: Math.round(Math.random() * 1000) },
+        { name: '宁夏', value: Math.round(Math.random() * 1000) },
+        { name: '海南', value: Math.round(Math.random() * 1000) },
+        { name: '台湾', value: Math.round(Math.random() * 1000) },
+        { name: '香港', value: Math.round(Math.random() * 1000) },
+        { name: '澳门', value: Math.round(Math.random() * 1000) },
+      ];
+    }
+    let maxvalue = 0;
+    array.map(item => {
+      if (item.value > maxvalue) {
+        maxvalue = item.value;
       }
-      let maxvalue = 0;
-      data.result.map(item => {
-        if (item.value > maxvalue) {
-          maxvalue = item.value;
-        }
-      });
+    });
+    var opts = JSON.parse(JSON.stringify(zMapOpts));
+    opts.title.subtext += time;
+    opts.visualMap.max = maxvalue;
+    opts.series[0].data = array;
+    console.log(opts);
 
-      var opts = {
-        // backgroundColor: '#404a59',
-        title: {
-          text: '王卡订单来源分布',
-          subtext: '日期：' + time,
-          left: 'center',
-          textStyle: {
-            fontSize: 25,
-            color: '#fff',
-          },
-          subtextStyle: {
-            color: '#fff',
-          },
-        },
-        tooltip: {
-          trigger: 'item',
-        },
-        visualMap: {
-          min: 0,
-          max: maxvalue,
-          left: 'left',
-          top: 'bottom',
-          text: ['高', '低'], // 文本，默认为数值文本
-          calculable: true,
-          inRange: {
-            color: ['#64b8bd', '#006edd'], // 浅蓝
-          },
-          textStyle: {
-            color: '#fff',
-          },
-          // dimension: 2
-        },
-        toolbox: {
-          show: true,
-          orient: 'vertical',
-          left: 'right',
-          top: 'center',
-          feature: {
-            mark: { show: true },
-            dataView: { show: true, readOnly: false },
-            restore: { show: true },
-            saveAsImage: { show: true },
-          },
-        },
-        series: [
-          {
-            name: '王卡订单',
-            type: 'map',
-            mapType: 'china',
-            roam: true,
-            itemStyle: {
-              normal: {
-                borderColor: 'rgba(147, 235, 248, 1)',
-                borderWidth: 1,
-                areaColor: 'rgba(255,255,255,0.1)',
-                shadowColor: 'rgba(128, 217, 248, 1)',
-                // shadowColor: 'rgba(255, 255, 255, 1)',
-                shadowOffsetX: -1,
-                shadowOffsetY: -1,
-                shadowBlur: 10,
-              },
-              emphasis: {
-                areaColor: 'rgba(255,255,0,0.8)',
-                borderWidth: 1,
-                lable: {
-                  show: true,
-                },
-                
-              },
-            },
-            data: data.result,
-          },
-        ],
-      };
-      this.setState({
-        zOptions: opts,
-      });
-      var count = 0;
-      var dataLength = data.result.length;
-      this.zScroolTimer = setInterval(() => {
+    this.setState({
+      zOptions: opts,
+    });
+    this.zScrollLength = array.length;
+  };
+
+  queryMapData = time => {
+    this.zQueryDate = time;
+    $.ajax({
+      url: 'http://10.52.200.46:9002/api/order/count_by_day?date=' + time,
+      method: 'get',
+      timeout: 1000,
+      success: data => {
+        this.updateMap(time, data.result);
+      },
+      error: () => {
+        this.updateMap(time, null);
+      },
+    });
+  };
+
+  saveDatePicker = (e, datestring) => {
+    this.zQueryDate = datestring;
+  };
+
+  queryButton = e => {
+    this.queryMapData(this.zQueryDate);
+  };
+
+  onChartReady = echart => {
+    this.zEchart = echart;
+    let count = 0;
+    !this.zScroolTimer &&
+      (this.zScroolTimer = setInterval(() => {
         if (this.zScroolPauser) {
           return;
         }
@@ -393,51 +359,36 @@ export default class ZChinaMap extends Component {
         this.zEchart.dispatchAction({
           type: 'highlight',
           seriesIndex: 0,
-          dataIndex: count % dataLength,
+          dataIndex: count % this.zScrollLength,
         });
         this.zEchart.dispatchAction({
           type: 'showTip',
           seriesIndex: 0,
-          dataIndex: count % dataLength
+          dataIndex: count % this.zScrollLength,
+          position: [10, 10],
         });
         count++;
-      }, 1000);
-      this.zEchart.on('mouseover', params => {
-        this.zScroolPauser = true;
-        this.zEchart.dispatchAction({
-          type: 'downplay',
-          seriesIndex: 0,
-        });
-        this.zEchart.dispatchAction({
-          type: 'highlight',
-          seriesIndex: 0,
-          dataIndex: params.dataIndex,
-        });
-        this.zEchart.dispatchAction({
-          type: 'showTip',
-          seriesIndex: 0,
-          dataIndex: params.dataIndex
-        });
+      }, 1000));
+    this.zEchart.on('mouseover', params => {
+      this.zScroolPauser = true;
+      this.zEchart.dispatchAction({
+        type: 'downplay',
+        seriesIndex: 0,
       });
-      this.zEchart.on('mouseout', params => {
-        this.zScroolPauser = false;
+      this.zEchart.dispatchAction({
+        type: 'highlight',
+        seriesIndex: 0,
+        dataIndex: params.dataIndex,
       });
+      // this.zEchart.dispatchAction({
+      //   type: 'showTip',
+      //   seriesIndex: 0,
+      //   dataIndex: params.dataIndex
+      // });
     });
-  };
-
-  storeMapDom = element => {
-    this.zEChartDom = element;
-  };
-
-  saveDatePicker = (e, datestring) => {
-    this.zQueryDate = datestring;
-  };
-  queryButton = e => {
-    this.updateMap(this.zQueryDate);
-  };
-
-  onChartReady = echart => {
-    this.zEchart = echart;
+    this.zEchart.on('mouseout', params => {
+      this.zScroolPauser = false;
+    });
   };
 
   render() {
@@ -465,7 +416,6 @@ export default class ZChinaMap extends Component {
                 style={{ height: '100%' }}
                 option={this.state.zOptions}
               />
-              {/* <div ref={this.zEChartDom} style={{ height: '100%' }}></div> */}
             </Col>
           </Row>
         </Col>
