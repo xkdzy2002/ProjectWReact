@@ -80,7 +80,7 @@ const CreateForm = Form.create()(props => {
         </Col>
         <Col span={2}>
           <FormItem  wrapperCol={{ span: 12, offset: 6 }}>
-            <Button type="primary" htmlType="submit">提交</Button>
+            <Button type="primary" icon="search" htmlType="submit">搜索</Button>
           </FormItem>
         </Col>
         </Row>
@@ -173,7 +173,7 @@ export default class DoneOrders extends Component {
       <div>
         <CreateForm getTableList={this.getTableList}>
         </CreateForm>
-        <Table columns={columns} dataSource={this.state.dataList} size="middle" />
+        <Table columns={columns} dataSource={this.state.dataList} size="small" />
       </div>
     );
   }

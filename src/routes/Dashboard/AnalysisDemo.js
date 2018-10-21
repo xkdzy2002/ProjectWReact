@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'dva';
 import {Row,Col,Icon,Card,Tabs,Table,Radio,DatePicker,Tooltip,Menu,Dropdown,} from 'antd';
 import numeral from 'numeral';
 import { ChartCard, yuan, MiniArea, MiniBar,MiniProgress,Field,Bar,Pie,TimelineChart,} from '../../components/Charts';
@@ -40,13 +41,19 @@ const topColResponsiveProps = {
 //   loading: loading.effects['chart/fetch'],
 // }))
 
+@connect(({ chart, loading }) => ({
+  chart,
+  loading: loading.effects['chart/fetch'],
+}))
+
 export default class  AnalysisDemo extends Component{
 
   state = {
     salesType: 'all',
     currentTabKey: '',
     rangePickerValue: getTimeDistance('year'),
-    chartdata:[]
+    orderByDay:'',
+    orderByMonth:'',
   };
 
   componentDidMount() {
@@ -54,31 +61,105 @@ export default class  AnalysisDemo extends Component{
     // dispatch({
     //   type: 'chart/fetch',
     // });
-    this.request();
+    console.log("XXXXXX");
+    this.order_number_by_day();
+    this.order_number_by_month();
   }
+  componentWillUnmount(){
+    this.setState = (state,callback)=>{
+    return;
+    };
+  }
+    order_number_by_day = ()=>{
+        axios.ajax({
+            url:'/stat/order_number_by_day',
+            data:{
+                params:{
+                    page:1
+                },
+                //isShowLoading:false
+            }
+        }).then((res) =>{
+            if(!res.error){
+                res.result.map((item,index)=>{
+                    item.key = index;
+                })
+                this.setState({
+                    orderByDay:res.result
+                });
+            }
+        })
+    }
 
-  request = ()=>{
-    axios.ajax({
-        url:'/stat/order_number_by_day',
-        data:{
-            params:{
-                page:1
-            },
-            //isShowLoading:false
-        }
-    }).then((res) =>{
-        if(!res.error){
-            res.result.map((item,index)=>{
-                item.key = index;
-            })
-            this.setState({
-                // dataSource2:res.result,
-                // page_size:res.page_size,
-                // total_count:res.total_count
-            });
-        }
-    })
- }
+    order_number_by_month = ()=>{
+        axios.ajax({
+            url:'/stat/order_number_by_month',
+            data:{
+                params:{
+                    page:1
+                },
+                //isShowLoading:false
+            }
+        }).then((res) =>{
+            if(!res.error){
+                res.result.map((item,index)=>{
+                    item.key = index;
+                })
+                this.setState({
+                    orderByMonth:res.result
+                });
+            }
+        })
+    }
+
+  // order_number_by_month = ()=>{
+  //     console.log('order_number_by_month');
+  //     axios.ajax({
+  //         url:'/stat/order_number_by_month',
+  //         data:{
+  //             params:{
+  //                 page:1
+  //             },
+  //         }
+  //     }).then((res) =>{
+  //         console.log(res);
+  //         if(!res.error){
+  //           res.result.map((item,index)=>{
+  //               item.key = index;
+  //           })
+  //           this.setState({
+  //               // dataSource2:res.result,
+  //               // page_size:res.page_size,
+  //               // total_count:res.total_count
+  //               visitData:res.result
+  //           });
+  //       })
+  //   }}
+//   order_number = ()=>{
+//     console.log('order_number');
+//     axios.ajax({
+//         url:'/stat/order_number',
+//         data:{
+//             params:{
+//                 page:1
+//             },
+//         }
+//     }).then((res) =>{
+//         console.log(res);
+//         if(!res.error){
+//           res.result.map((item,index)=>{
+//               item.key = index;
+//           })
+//           this.setState({
+//               // dataSource2:res.result,
+//               // page_size:res.page_size,
+//               // total_count:res.total_count
+//               visitData:res.result
+//           });
+
+//     })
+// }
+
 
   render(){
       return(
@@ -122,7 +203,7 @@ export default class  AnalysisDemo extends Component{
                 footer={<Field label="日访问量" value={numeral(1234).format('0,0')} />}
                 contentHeight={46}
               >
-                <MiniArea color="#975FE4" />
+                <MiniArea color="#975FE4" data={this.state.orderByDay}/>
               </ChartCard>
             </Col>
             <Col {...topColResponsiveProps}>
@@ -139,7 +220,7 @@ export default class  AnalysisDemo extends Component{
                 footer={<Field label="转化率" value="60%" />}
                 contentHeight={46}
               >
-                <MiniBar  />
+                <MiniBar data={this.state.orderByDay}/>
               </ChartCard>
             </Col>
             <Col {...topColResponsiveProps}>

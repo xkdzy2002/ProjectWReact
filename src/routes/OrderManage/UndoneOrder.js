@@ -50,8 +50,8 @@ const CreateForm = Form.create()(props => {
           initialValue: formValues.customer_name,
           rules: [{
             required: true,
-            message: '必填选项',
-            max: 6
+            message: '请输入正确姓名',
+            pattern: /^[\u4E00-\u9FA5]{2,4}$/
           }],
         })(<Input placeholder="姓名"/>)}
       </FormItem>
@@ -82,7 +82,7 @@ const CreateForm = Form.create()(props => {
           rules: [{
             required: true,
             message: '请输入正确地址',
-            min: 9
+            min: 6
           }],
         })(<Input placeholder="联系地址"/>)}
       </FormItem>
@@ -137,18 +137,11 @@ export default class UndoneOrders extends Component {
       title: '订单ID',
       dataIndex: 'order_id',
       key: 'order_id',
-      // filters: [{ text: 'Joe', value: 'Joe' }, { text: 'Jim', value: 'Jim' }],
-      // filteredValue: filteredInfo.name || null,
-      // onFilter: (value, record) => record.name.includes(value),
-      // sorter: (a, b) => a.name.length - b.name.length,
-      // sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       title: '用户姓名',
       dataIndex: 'customer_name',
       key: 'customer_name',
-      // sorter: (a, b) => a.age - b.age,
-      // sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
     },
     {
       title: '新选号',
@@ -174,7 +167,7 @@ export default class UndoneOrders extends Component {
       title: '操作',
       key: 'action',
       render: (text, record, index) => (
-        <Button type="primary" onClick={()=>this.showModal(true, index)}>
+        <Button type="primary" icon="edit" size="small" onClick={()=>this.showModal(true, index)}>
           编辑
         </Button>
       ),
@@ -192,7 +185,7 @@ export default class UndoneOrders extends Component {
     const sor = [this.state.dataList[0]];
     return (
       <div>
-        <Table columns={this.columns} dataSource={this.state.dataList} size="middle" />
+        <Table columns={this.columns} dataSource={this.state.dataList} size="small" />
         <CreateForm
           modalVisiable={modalVisiable}
           showModal={this.showModal}

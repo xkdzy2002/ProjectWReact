@@ -6,7 +6,12 @@ export default class Axios {
   static jsonp(options) {
     return new Promise((resolve, reject) => {
       JsonP(options.url, { param: 'callback' }, function(err, response) {
-        if (response.status === 'success') {
+        // if (response.status === 'success') {
+        //   resolve(response);
+        // } else {
+        //   reject(response.messsage);
+        // }
+        if (!response.err) {
           resolve(response);
         } else {
           reject(response.messsage);
@@ -17,10 +22,6 @@ export default class Axios {
 
   static ajax(options) {
     let loading;
-    // if(options.data && options.data.isShowLoading !== false){
-    //     loading = document.getElementById('ajaxLoading');
-    //     loading.style.display = 'block';
-    // }
 
     // let baseApi = 'https://www.easy-mock.com/mock/5bc303ecb0bf35423bd75308/mockapi';
     let baseApi = 'http://10.52.200.46:9002/api';
@@ -32,24 +33,20 @@ export default class Axios {
         timeout: 5000,
         params: (options.data && options.data.params) || '',
       }).then(response => {
-        // if(options.data && options.data.isShowLoading !== false){
-        //     loading = document.getElementById('ajaxLoading');
-        //     loading.style.display = 'none';
-        // }
 
-        if (response.status == '200') {
-          let res = response.data;
-          if (res.code == 0) {
-            resolve(res);
-          } else {
+        if(response.status == '200'){
+            console.log(response.data);
+            let res = response.data;
             Modal.info({
-              title: '提示',
-              content: res.msg,
+              title: '获取数据提示',
+              content: response.error == null?'数据正常返回': response.error
             });
-          }
-        } else {
-          reject(response.data);
+
+            resolve(res);
+        }else{
+            reject(response.data);
         }
+
       });
     });
   }
