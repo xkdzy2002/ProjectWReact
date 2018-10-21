@@ -398,8 +398,7 @@ export default class ZChinaMap extends Component {
         this.zEchart.dispatchAction({
           type: 'showTip',
           seriesIndex: 0,
-          dataIndex: count % dataLength,
-          position: [10, 10],
+          dataIndex: count % dataLength
         });
         count++;
       }, 1000);
@@ -417,8 +416,7 @@ export default class ZChinaMap extends Component {
         this.zEchart.dispatchAction({
           type: 'showTip',
           seriesIndex: 0,
-          dataIndex: params.dataIndex,
-          position: [10, 10],
+          dataIndex: params.dataIndex
         });
       });
       this.zEchart.on('mouseout', params => {
