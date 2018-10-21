@@ -129,16 +129,20 @@ export const getRouterData = app => {
     '/report/report-time': {
       component: dynamicWrapper(app, [], () => import('../routes/ReportAnay/TableTime')),
     },
-    // 报表分析-归属地
+    // 报表分析-归属地(删除)
     '/report/report-attr': {
       component: dynamicWrapper(app, [], () => import('../routes/ReportAnay/TableAttr')),
     },
-    // 报表分析-监控
+    // 报表分析-监控（删除）
     // '/report/report-monitor':{
     //   component: dynamicWrapper(app, [], () => import('../routes/Dashboard/Analysis')),
     // },
+    // 报表分析-销量监控
     '/report/report-monitor':{
       component: dynamicWrapper(app, [], () => import('../routes/Dashboard/AnalysisDemo')),
+    },
+    '/report/report-transratio':{
+      component: dynamicWrapper(app, [], () => import('../routes/Dashboard/TransferRatio')),
     },
     // 其他
     '/exception/403': {

@@ -39,7 +39,7 @@ export default class Axios {
       }).then(response => {
 
         if(response.status == '200'){
-            console.log(response.data);
+            // console.log(response.data);
             let res = response.data;
 
             // 如果是是使用Mock测试数据需要屏蔽下面的，否则功能不正常

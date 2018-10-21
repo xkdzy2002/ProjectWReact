@@ -16,7 +16,7 @@ const { RangePicker } = DatePicker;
 const rankingListData = [];
 for (let i = 1; i <= 10; i += 1) {
   rankingListData.push({
-    title: `省公司`,
+    title: `省公司` + i,
     total: 323234,
   });
 }
@@ -46,8 +46,10 @@ export default class  AnalysisDemo extends Component{
     orderByDay:'',
     orderByMonth:'',
     salesExtra:'',
-    loading:false
+    loading:false,
   };
+  interval1 = null;
+  interval2 = null;
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -70,7 +72,7 @@ export default class  AnalysisDemo extends Component{
           </div>
           <RangePicker
             value={this.state.rangePickerValue}
-            onChange={this.handleRangePickerChange}
+
             style={{ width: 256 }}
           />
         </div>
@@ -79,19 +81,13 @@ export default class  AnalysisDemo extends Component{
 
     );
 
-    // dispatch({
-    //   type: 'chart/fetch',
-    // });
-    console.log("XXXXXX");
-    setInterval(()=>{
+    this.interval1 = setInterval(()=>{
       this.order_number_by_day();
     },1000);
-    // 程序演示时再开启
-    // this.order_number_by_day();
-    // this.order_number_by_month();
-    setInterval(()=>{
+
+    this.interval2 = setInterval(()=>{
       this.order_number_by_month();
-    },5000);
+    },3000);
   }
 
    isActive(type) {
@@ -113,27 +109,13 @@ export default class  AnalysisDemo extends Component{
       rangePickerValue: getTimeDistance(type),
   });
 
-  handleRangePickerChange = rangePickerValue => {
-    this.setState({
-      rangePickerValue,
-    });
-
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  };
-
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'chart/fetchSalesData',
-    // });
-
   };
   componentWillUnmount(){
     this.setState = (state,callback)=>{
     return;
     };
+    clearInterval(this.interval1);
+    clearInterval(this.interval2);
   }
   order_number_by_day = ()=>{
         axios.ajax({
@@ -179,11 +161,11 @@ export default class  AnalysisDemo extends Component{
                     // 2018-01
                     let jsontemp = {x: index + 1 + '月',y:count};
                     // 验证结果
-                    console.log(jsontemp);
+                    // console.log(jsontemp);
                     // 加入到对象数组
                     JsonArray.push(jsontemp);
                 })
-                console.log(JsonArray);
+                // console.log(JsonArray);
                 this.setState({
                     // 设置图表需要使用的Jason对象数组
                     orderByMonth:JsonArray

@@ -49,21 +49,26 @@ const menuData = [
     path: 'report',
     children: [
       {
-        name: '总览',
+        name: '销售总览',
         path: 'report-total',
       },
       {
-        name: '归属地',
-        path: 'report-attr',
-      },
-      {
-        name: '时间',
-        path: 'report-time',
-      },
-      {
-        name: '监控',
+        name: '数据监控',
         path: 'report-monitor',
-      }
+      },
+      {
+        name: '转化率',
+        path: 'report-transratio',
+      },
+      // {
+      //   name: '归属地',
+      //   path: 'report-attr',
+      // },
+      // {
+      //   name: '时间',
+      //   path: 'report-time',
+      // },
+
     ],
   },
   // {
