@@ -265,7 +265,6 @@ export default class ZChinaMap extends Component {
 
   updateMap = (time, array) => {
     if (array == null) {
-      console.log('假数据');
       array = [
         { name: '北京', value: Math.round(Math.random() * 1000) },
         { name: '天津', value: Math.round(Math.random() * 1000) },
@@ -313,8 +312,6 @@ export default class ZChinaMap extends Component {
     opts.title.subtext += time;
     opts.visualMap.max = maxvalue;
     opts.series[0].data = array;
-    console.log(opts);
-
     this.setState({
       zOptions: opts,
     });
@@ -345,6 +342,7 @@ export default class ZChinaMap extends Component {
   };
 
   onChartReady = echart => {
+    console.log('qinx6_echart.ready');
     this.zEchart = echart;
     let count = 0;
     !this.zScroolTimer &&
@@ -390,6 +388,11 @@ export default class ZChinaMap extends Component {
       this.zScroolPauser = false;
     });
   };
+
+  componentWillUnmount()
+  {
+    clearInterval(this.zScroolTimer);
+  }
 
   render() {
     return (
