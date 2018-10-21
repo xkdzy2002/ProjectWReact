@@ -14,9 +14,9 @@ const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
 
 const rankingListData = [];
-for (let i = 0; i < 7; i += 1) {
+for (let i = 1; i <= 10; i += 1) {
   rankingListData.push({
-    title: `工专路 ${i} 号店`,
+    title: `省公司`,
     total: 323234,
   });
 }
@@ -36,15 +36,6 @@ const topColResponsiveProps = {
   style: { marginBottom: 24 },
 };
 
-// @connect(({ chart, loading }) => ({
-//   chart,
-//   loading: loading.effects['chart/fetch'],
-// }))
-
-@connect(({ chart, loading }) => ({
-  chart,
-  loading: loading.effects['chart/fetch'],
-}))
 
 export default class  AnalysisDemo extends Component{
 
@@ -54,23 +45,97 @@ export default class  AnalysisDemo extends Component{
     rangePickerValue: getTimeDistance('year'),
     orderByDay:'',
     orderByMonth:'',
+    salesExtra:'',
+    loading:false
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    this.setState({
+        salesExtra:(
+        <div className={styles.salesExtraWrap}>
+          <div className={styles.salesExtra}>
+            <a className={this.isActive('today')} onClick={() => this.selectDate('today')}>
+              今日
+            </a>
+            <a className={this.isActive('week')} onClick={() => this.selectDate('week')}>
+              本周
+            </a>
+            <a className={this.isActive('month')} onClick={() => this.selectDate('month')}>
+              本月
+            </a>
+            <a className={this.isActive('year')} onClick={() => this.selectDate('year')}>
+              全年
+            </a>
+          </div>
+          <RangePicker
+            value={this.state.rangePickerValue}
+            onChange={this.handleRangePickerChange}
+            style={{ width: 256 }}
+          />
+        </div>
+      )
+    }
+
+    );
+
     // dispatch({
     //   type: 'chart/fetch',
     // });
     console.log("XXXXXX");
-    this.order_number_by_day();
-    this.order_number_by_month();
+    setInterval(()=>{
+      this.order_number_by_day();
+    },1000);
+    // 程序演示时再开启
+    // this.order_number_by_day();
+    // this.order_number_by_month();
+    setInterval(()=>{
+      this.order_number_by_month();
+    },5000);
   }
+
+   isActive(type) {
+    const { rangePickerValue } = this.state;
+    const value = getTimeDistance(type);
+    if (!rangePickerValue[0] || !rangePickerValue[1]) {
+      return;
+    }
+    if (
+      rangePickerValue[0].isSame(value[0], 'day') &&
+      rangePickerValue[1].isSame(value[1], 'day')
+    ) {
+      return styles.currentDate;
+    }
+  }
+
+  selectDate = type => {
+    this.setState({
+      rangePickerValue: getTimeDistance(type),
+  });
+
+  handleRangePickerChange = rangePickerValue => {
+    this.setState({
+      rangePickerValue,
+    });
+
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'chart/fetchSalesData',
+    });
+  };
+
+    // const { dispatch } = this.props;
+    // dispatch({
+    //   type: 'chart/fetchSalesData',
+    // });
+
+  };
   componentWillUnmount(){
     this.setState = (state,callback)=>{
     return;
     };
   }
-    order_number_by_day = ()=>{
+  order_number_by_day = ()=>{
         axios.ajax({
             url:'/stat/order_number_by_day',
             data:{
@@ -98,69 +163,34 @@ export default class  AnalysisDemo extends Component{
                 params:{
                     page:1
                 },
-                //isShowLoading:false
             }
         }).then((res) =>{
+            // json对象数组，用于存放转化完成后的json对象
+            let JsonArray = [];
             if(!res.error){
+                // 对数据集中的每个数据进行遍历操作
                 res.result.map((item,index)=>{
-                    item.key = index;
+                    // 将每个item项目{month: "XXXX", count: XXX}转换成{x:"[1-12]月",y:[]}的格式
+                    // 表格需要按此格式设置数据项才能正常显示
+                    // console.log(item);
+                    // 解构赋值
+                    let {month,count} = item;
+                    // 按照格式要求制作新的json临时对象
+                    // 2018-01
+                    let jsontemp = {x: index + 1 + '月',y:count};
+                    // 验证结果
+                    console.log(jsontemp);
+                    // 加入到对象数组
+                    JsonArray.push(jsontemp);
                 })
+                console.log(JsonArray);
                 this.setState({
-                    orderByMonth:res.result
+                    // 设置图表需要使用的Jason对象数组
+                    orderByMonth:JsonArray
                 });
             }
         })
     }
-
-  // order_number_by_month = ()=>{
-  //     console.log('order_number_by_month');
-  //     axios.ajax({
-  //         url:'/stat/order_number_by_month',
-  //         data:{
-  //             params:{
-  //                 page:1
-  //             },
-  //         }
-  //     }).then((res) =>{
-  //         console.log(res);
-  //         if(!res.error){
-  //           res.result.map((item,index)=>{
-  //               item.key = index;
-  //           })
-  //           this.setState({
-  //               // dataSource2:res.result,
-  //               // page_size:res.page_size,
-  //               // total_count:res.total_count
-  //               visitData:res.result
-  //           });
-  //       })
-  //   }}
-//   order_number = ()=>{
-//     console.log('order_number');
-//     axios.ajax({
-//         url:'/stat/order_number',
-//         data:{
-//             params:{
-//                 page:1
-//             },
-//         }
-//     }).then((res) =>{
-//         console.log(res);
-//         if(!res.error){
-//           res.result.map((item,index)=>{
-//               item.key = index;
-//           })
-//           this.setState({
-//               // dataSource2:res.result,
-//               // page_size:res.page_size,
-//               // total_count:res.total_count
-//               visitData:res.result
-//           });
-
-//     })
-// }
-
-
   render(){
       return(
           <Fragment>
@@ -253,58 +283,58 @@ export default class  AnalysisDemo extends Component{
             </Col>
           </Row>
 
-            <Card loading={false} bordered={false} bodyStyle={{ padding: 0 }}>
-            <div className={styles.salesCard}>
-              <Tabs size="large" tabBarStyle={{ marginBottom: 24 }}>
-                <TabPane tab="销售额" key="sales">
-                  <Row>
-                    <Col xl={16} lg={12} md={12} sm={24} xs={24}>
-                      <div className={styles.salesBar}>
-                        <Bar height={295} title="销售额趋势" />
-                      </div>
-                    </Col>
-                    <Col xl={8} lg={12} md={12} sm={24} xs={24}>
-                      <div className={styles.salesRank}>
-                        <h4 className={styles.rankingTitle}>门店销售额排名</h4>
-                        <ul className={styles.rankingList}>
-                          {rankingListData.map((item, i) => (
-                            <li key={item.title}>
-                              <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
-                              <span>{item.title}</span>
-                              <span>{numeral(item.total).format('0,0')}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </Col>
-                  </Row>
-                </TabPane>
-                <TabPane tab="访问量" key="views">
-                  <Row>
-                    <Col xl={16} lg={12} md={12} sm={24} xs={24}>
-                      <div className={styles.salesBar}>
-                        <Bar height={292} title="访问量趋势" />
-                      </div>
-                    </Col>
-                    <Col xl={8} lg={12} md={12} sm={24} xs={24}>
-                      <div className={styles.salesRank}>
-                        <h4 className={styles.rankingTitle}>门店访问量排名</h4>
-                        <ul className={styles.rankingList}>
-                          {rankingListData.map((item, i) => (
-                            <li key={item.title}>
-                              <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
-                              <span>{item.title}</span>
-                              <span>{numeral(item.total).format('0,0')}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </Col>
-                  </Row>
-                </TabPane>
-              </Tabs>
-            </div>
-          </Card>
+          <Card loading={this.state.loading} bordered={false} bodyStyle={{ padding: 0 }}>
+          <div className={styles.salesCard}>
+            <Tabs tabBarExtraContent={this.state.salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
+              <TabPane tab="销售额" key="sales">
+                <Row>
+                  <Col xl={16} lg={12} md={12} sm={24} xs={24}>
+                    <div className={styles.salesBar}>
+                      <Bar height={295} title="销售额趋势" data={this.state.orderByMonth} />
+                    </div>
+                  </Col>
+                  <Col xl={8} lg={12} md={12} sm={24} xs={24}>
+                    <div className={styles.salesRank}>
+                      <h4 className={styles.rankingTitle}>省分销售量排名Top10</h4>
+                      <ul className={styles.rankingList}>
+                        {rankingListData.map((item, i) => (
+                          <li key={item.title}>
+                            <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
+                            <span>{item.title}</span>
+                            <span>{numeral(item.total).format('0,0')}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </Col>
+                </Row>
+              </TabPane>
+              <TabPane tab="访问量" key="views">
+                <Row>
+                  <Col xl={16} lg={12} md={12} sm={24} xs={24}>
+                    <div className={styles.salesBar}>
+                      <Bar height={292} title="访问量趋势" data={this.state.orderByMonth} />
+                    </div>
+                  </Col>
+                  <Col xl={8} lg={12} md={12} sm={24} xs={24}>
+                    <div className={styles.salesRank}>
+                      <h4 className={styles.rankingTitle}>省分访问量排名Top10</h4>
+                      <ul className={styles.rankingList}>
+                        {rankingListData.map((item, i) => (
+                          <li key={item.title}>
+                            <span className={i < 3 ? styles.active : ''}>{i + 1}</span>
+                            <span>{item.title}</span>
+                            <span>{numeral(item.total).format('0,0')}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </Col>
+                </Row>
+              </TabPane>
+            </Tabs>
+          </div>
+        </Card>
 
           {/*<Card
             className={styles.offlineCard}
