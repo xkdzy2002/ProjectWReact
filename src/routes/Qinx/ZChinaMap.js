@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Icon, DatePicker, Button } from 'antd';
+import { Row, Col, Icon, DatePicker, Button, Card } from 'antd';
 import { now } from 'moment';
 import ReactEcharts from 'echarts-for-react';
 import Particles from 'react-particles-js';
@@ -170,10 +170,10 @@ let zMapOpts = {
     },
   },
   tooltip: {
-    padding: 10,
+    padding:[10,10],
     backgroundColor: 'rgba(0,0,255,0.6)',
-    borderColor: 'rgba(255,255,255,0.4)',
-    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,1)',
+    borderWidth: 1,
     extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);',
     transitionDuration: 1,
     textStyle: {
@@ -256,6 +256,11 @@ export default class ZChinaMap extends Component {
     this.state = {
       zOptions: zMapOpts,
       zAnimation: zAnimationOpts2,
+      zRenderData: {
+        name: '',
+        value: '',
+        date: ''
+      }
     };
 
     let time = new Date(now());
@@ -350,6 +355,10 @@ export default class ZChinaMap extends Component {
         if (this.zScroolPauser) {
           return;
         }
+        // let obj = JSON.parse(JSON.stringify(this.state.zOptions.series[0].data[count]));
+        // this.setState({
+        //   zRenderData: obj
+        // })
         this.zEchart.dispatchAction({
           type: 'downplay',
           seriesIndex: 0,
@@ -368,6 +377,7 @@ export default class ZChinaMap extends Component {
         count++;
       }, 1000));
     this.zEchart.on('mouseover', params => {
+      console.log(params);
       this.zScroolPauser = true;
       this.zEchart.dispatchAction({
         type: 'downplay',
@@ -378,19 +388,22 @@ export default class ZChinaMap extends Component {
         seriesIndex: 0,
         dataIndex: params.dataIndex,
       });
-      // this.zEchart.dispatchAction({
-      //   type: 'showTip',
-      //   seriesIndex: 0,
-      //   dataIndex: params.dataIndex
-      // });
+      // let obj = JSON.parse(JSON.stringify(this.state.zOptions.series[0].data[params.dataIndex]));
+      // this.setState({
+      //   zRenderData: obj
+      // })
+      this.zEchart.dispatchAction({
+        type: 'showTip',
+        seriesIndex: 0,
+        dataIndex: params.dataIndex
+      });
     });
     this.zEchart.on('mouseout', params => {
       this.zScroolPauser = false;
     });
   };
 
-  componentWillUnmount()
-  {
+  componentWillUnmount() {
     clearInterval(this.zScroolTimer);
   }
 
@@ -419,6 +432,14 @@ export default class ZChinaMap extends Component {
                 style={{ height: '100%' }}
                 option={this.state.zOptions}
               />
+              {/* <Card
+                title="王卡订单信息"
+                headStyle={{ color: 'white', fontSize: '1.3em', fontWeight: 'bold', textshadow: '2px 2px 5px #0056dc' }}
+                style={{ position: 'absolute', top: '10px', left: '10px', backgroundColor: 'rgba(0,0,255,0.7)', color: 'white' }}
+              >
+                <p>{this.state.zRenderData.name + ":" + this.state.zRenderData.value}</p>
+                <p>{"日期:" + this.state.zRenderData.date}</p>
+              </Card> */}
             </Col>
           </Row>
         </Col>
