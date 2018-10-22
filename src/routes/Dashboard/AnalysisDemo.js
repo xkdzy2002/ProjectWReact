@@ -14,9 +14,10 @@ const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
 
 const rankingListData = [];
-for (let i = 1; i <= 10; i += 1) {
+const provincename = ["浙江","山西","北京","广东","重庆","河南","福建","安徽","江西","天津"];
+for (let i = 0; i <= 9; i += 1) {
   rankingListData.push({
-    title: `省公司` + i,
+    title: `${provincename[i]}`,
     total: 323234,
   });
 }

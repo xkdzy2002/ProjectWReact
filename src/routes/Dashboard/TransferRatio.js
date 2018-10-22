@@ -13,10 +13,11 @@ import styles from './TransferRatio.less';
 const { TabPane } = Tabs;
 const { RangePicker } = DatePicker;
 
+const provincename = ["浙江","山西","北京","广东","重庆","河南","福建","安徽","江西","天津"];
 const rankingListData = [];
 for (let i = 1; i <= 10; i += 1) {
   rankingListData.push({
-    title: `省公司` + i,
+    title: `${provincename[i]}`,
     total: 323234,
   });
 }
@@ -78,24 +79,31 @@ export default class TransferRatio extends Component{
     offlineData:[],
     offlineChartData:[],
     activeKey:'',
-    one:'',
+    one:{name:'',cvr:'',percent:'',total:''},
+    percent:'',
+    subTitle:'',
+    total:''
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
+    console.log("componentDidMount:",this.state.offlineData[0]);
     this.setState({
       activeKey:this.state.currentTabKey || (this.state.offlineData[0] && this.state.offlineData[0].name),
+      percent:50,
+      subTitle:'浙江',
+      total:'50%',
     });
 
     console.log("TransferRatio");
 
     this.interval1 = setInterval(()=>{
       this.order_number_by_timeseries();
-    },3000);
+    },10000);
 
     this.interval2 = setInterval(()=>{
       this.province_with_transferatio();
-    },1000);
+    },10000);
   }
 
   componentWillUnmount(){
@@ -146,12 +154,12 @@ export default class TransferRatio extends Component{
             })
             this.setState({
               offlineData:res.result,
-
+              one:this.state.offlineData[0]
             });
         }
-        // console.log((this.state.offlineData)[0].name,(this.state.offlineData)[0].cvr);
+        console.log(this.state.offlineData[0]);
 
-        one = this.state.offlineData[0];
+        // console.log("one:",one.name,one.percent,one.total);
         two = this.state.offlineData[1];
         three = this.state.offlineData[2];
     })
@@ -168,7 +176,9 @@ export default class TransferRatio extends Component{
           >
             <Row gutter={16}>
                 <Col className="gutter-row" span={3}>
-                  <div className="gutter-box"><Pie percent={28} subTitle="1" total="28%" height={140} /></div>
+                  <div className="gutter-box">
+                      <Pie percent={28} subTitle="2" total="28%" height={140} />
+                  </div>
                 </Col>
                 <Col className="gutter-row" span={3}>
                   <div className="gutter-box"><Pie percent={28} subTitle="2" total="28%" height={140} /></div>
