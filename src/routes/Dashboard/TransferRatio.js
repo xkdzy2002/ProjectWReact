@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Icon, Card, Tabs, Table, Radio, DatePicker, Tooltip, Menu, Dropdown, } from 'antd';
 import numeral from 'numeral';
-import { ChartCard, yuan, MiniArea, MiniBar, MiniProgress, Field, Bar, Pie, TimelineChart, } from '../../components/Charts';
+import { ChartCard, yuan, MiniArea, MiniBar, MiniProgress, Field, Bar, Pie, WaterWave, TimelineChart, } from '../../components/Charts';
 import Trend from '../../components/Trend';
 import NumberInfo from '../../components/NumberInfo';
 import { getTimeDistance } from '../../utils/utils';
@@ -79,7 +79,15 @@ export default class TransferRatio extends Component {
     offlineData: [],
     offlineChartData: [],
     activeKey: '',
+    // 粗暴的解决办法
     one: { name: '', cvr: '', percent: '', total: '' },
+    two: { name: '', cvr: '', percent: '', total: '' },
+    three: { name: '', cvr: '', percent: '', total: '' },
+    four: { name: '', cvr: '', percent: '', total: '' },
+    five: { name: '', cvr: '', percent: '', total: '' },
+    six: { name: '', cvr: '', percent: '', total: '' },
+    seven: { name: '', cvr: '', percent: '', total: '' },
+    eight: { name: '', cvr: '', percent: '', total: '' },
     percent: '',
     subTitle: '',
     total: ''
@@ -96,7 +104,7 @@ export default class TransferRatio extends Component {
 
     this.interval1 = setInterval(() => {
       this.order_number_by_timeseries();
-    }, 3000);
+    }, 1000);
 
     this.interval2 = setInterval(() => {
       this.province_with_transferatio();
@@ -141,7 +149,7 @@ export default class TransferRatio extends Component {
         },
       }
     }).then((res) => {
-      
+
       if (!res.error) {
         res.result.map((item, index) => {
           // item.key = index;
@@ -150,18 +158,23 @@ export default class TransferRatio extends Component {
         })
         this.setState({
           offlineData: res.result,
-          one: res.result[0]
+          one: res.result[0],
+          two: res.result[1],
+          three: res.result[2],
+          four: res.result[3],
+          five: res.result[4],
+          six: res.result[5],
+          seven: res.result[6],
+          eight: res.result[7]
         });
-       
+
       }
-
-
       // console.log("one:",one.name,one.percent,one.total);
+      console.log(this.state.one);
       two = this.state.offlineData[1];
       three = this.state.offlineData[2];
     })
   }
-
   render() {
 
     return (
@@ -175,29 +188,43 @@ export default class TransferRatio extends Component {
           <Row gutter={16}>
             <Col className="gutter-row" span={3}>
               <div className="gutter-box">
-                <Pie percent={this.state.one.percent} subTitle={this.state.one.name} total={this.state.one.total} height={140} />
+                  <Pie percent={this.state.one.percent} subTitle={this.state.one.name} total={this.state.one.total} height={140} />
               </div>
             </Col>
             <Col className="gutter-row" span={3}>
-              <div className="gutter-box"><Pie percent={28} subTitle="2" total="28%" height={140} /></div>
+              <div className="gutter-box">
+                  <Pie percent={this.state.two.percent} subTitle={this.state.two.name} total={this.state.two.total} height={140} />
+              </div>
             </Col>
             <Col className="gutter-row" span={3}>
-              <div className="gutter-box"><Pie percent={28} subTitle="3" total="28%" height={140} /></div>
+              <div className="gutter-box">
+                  <Pie percent={this.state.three.percent} subTitle={this.state.three.name} total={this.state.three.total} height={140} />
+              </div>
             </Col>
             <Col className="gutter-row" span={3}>
-              <div className="gutter-box"><Pie percent={28} subTitle="4" total="28%" height={140} /></div>
+              <div className="gutter-box">
+                  <Pie percent={this.state.four.percent} subTitle={this.state.four.name} total={this.state.four.total} height={140} />
+              </div>
             </Col>
             <Col className="gutter-row" span={3}>
-              <div className="gutter-box"><Pie percent={28} subTitle="5" total="28%" height={140} /></div>
+              <div className="gutter-box">
+                  <Pie percent={this.state.five.percent} subTitle={this.state.five.name} total={this.state.five.total} height={140} />
+              </div>
             </Col>
             <Col className="gutter-row" span={3}>
-              <div className="gutter-box"><Pie percent={28} subTitle="6" total="28%" height={140} /></div>
+              <div className="gutter-box">
+                  <Pie percent={this.state.six.percent} subTitle={this.state.six.name} total={this.state.six.total} height={140} />
+              </div>
             </Col>
             <Col className="gutter-row" span={3}>
-              <div className="gutter-box"><Pie percent={28} subTitle="7" total="28%" height={140} /></div>
+              <div className="gutter-box">
+                  <Pie percent={this.state.seven.percent} subTitle={this.state.seven.name} total={this.state.seven.total} height={140} />
+              </div>
             </Col>
             <Col className="gutter-row" span={3}>
-              <div className="gutter-box"><Pie percent={28} subTitle="8" total="28%" height={140} /></div>
+              <div className="gutter-box">
+                  <Pie percent={this.state.eight.percent} subTitle={this.state.eight.name} total={this.state.eight.total} height={140} />
+              </div>
             </Col>
           </Row>
           <TimelineChart
