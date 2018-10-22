@@ -14,13 +14,14 @@ export default class TipBox extends Component {
       <div className={styles.zBox}>
         <div className={styles.zTitle}>{title}</div>
         <div className={styles.zSpan} />
-        {messages.map((v, i) => {
-          return (
-            <div key={i} className={styles.zMessage}>
-              {v}
-            </div>
-          );
-        })}
+        {
+          messages.map((v, i) => {
+            return (
+              <div key={i} className={styles.zMessage}>
+                {v}
+              </div>
+            );
+          })}
       </div>
     );
   }

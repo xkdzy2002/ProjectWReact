@@ -396,7 +396,7 @@ export default class ZChinaMap extends Component {
 
   render() {
     return (
-      <Row style={{ height: '100%', padding: '3px', minHeight: '500px' }}>
+      <Row style={{ height: '100%', padding: '3px', minHeight: '600px' }}>
         <Col span={24} style={{ height: '100%' }}>
           <Row style={{ height: '10%' }}>
             <Col span={6}>
